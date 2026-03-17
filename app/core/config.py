@@ -7,15 +7,20 @@ class Settings(BaseSettings):
     model_config = SettingsConfigDict(
         env_file=".env",
         env_file_encoding="utf-8",
-        case_sensitive=True
+        case_sensitive=True,
+        extra="ignore"
     )
 
     PROJECT_NAME: str = "Recommendation API"
     API_V1_STR: str = "/api/v1"
     SECRET_KEY: str
-    API_KEY: str = "your-api-key-here"
+    API_KEY: str
+    SUPABASE_URL: str
+    SUPABASE_SERVICE_KEY: str
     ALGORITHM: str = "HS256"
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 11520
+    APP_ENV: str = "development"
+    DEBUG: bool = False
 
     POSTGRES_USER: str = "postgres"
     POSTGRES_PASSWORD: str = "postgres"

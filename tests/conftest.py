@@ -1,8 +1,14 @@
+import os
+os.environ["SECRET_KEY"] = "test_secret_key"
+os.environ["API_KEY"] = "test_admin_key"
+
 import asyncio
-import pytest
 import sys
-from app.db import session as db_session
+
+import pytest
 from httpx import AsyncClient, ASGITransport
+
+from app.db import session as db_session
 from app.main import app
 
 def pytest_configure(config):

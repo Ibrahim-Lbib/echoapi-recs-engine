@@ -1,12 +1,12 @@
 from fastapi import APIRouter, Depends, Query
 from sqlalchemy.ext.asyncio import AsyncSession
-from app.db.session import get_db
+from app.core.dependencies import get_db, verify_client_api_key
 from app.services.recommendation_service import RecommendationService
 from app.schemas.recommendation import RecommendationResponse
 
 router = APIRouter()
 
-@router.get("/", response_model=RecommendationResponse)
+@router.get("/", response_model=RecommendationResponse, dependencies=[Depends(verify_client_api_key)])
 async def get_recommendations(
     *,
     db: AsyncSession = Depends(get_db),

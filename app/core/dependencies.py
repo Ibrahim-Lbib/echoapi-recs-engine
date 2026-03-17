@@ -1,38 +1,15 @@
 from typing import Generator, Any, Optional
 from fastapi import Depends, HTTPException, status, Header
-from fastapi.security import OAuth2PasswordBearer
-from jose import jwt
-from pydantic import ValidationError
 from sqlalchemy.ext.asyncio import AsyncSession
-from app.core import security
 from app.core.config import settings
 from app.db.session import SessionLocal
-
-reusable_oauth2 = OAuth2PasswordBearer(
-    tokenUrl=f"{settings.API_V1_STR}/login/access-token"
-)
+from app.services.api_key_service import ApiKeyService
 
 async def get_db() -> Generator:
     async with SessionLocal() as session:
         yield session
 
-# Note: In a real app, you would fetch the user from the DB here.
-# For this MVP, we are keeping it simple.
-async def get_current_user(
-    token: str = Depends(reusable_oauth2)
-) -> Any:
-    try:
-        payload = jwt.decode(
-            token, settings.SECRET_KEY, algorithms=[settings.ALGORITHM]
-        )
-        token_data = payload.get("sub")
-    except (jwt.JWTError, ValidationError):
-        raise HTTPException(
-            status_code=status.HTTP_403_FORBIDDEN,
-            detail="Could not validate credentials",
-        )
-    return token_data
-
+# Admin key auth — protects internal endpoints like /train/
 async def verify_api_key(x_api_key: Optional[str] = Header(None)):
     if x_api_key != settings.API_KEY:
         raise HTTPException(
@@ -40,3 +17,16 @@ async def verify_api_key(x_api_key: Optional[str] = Header(None)):
             detail="Invalid or missing API key"
         )
     return x_api_key
+
+async def verify_client_api_key(x_api_key: Optional[str] = Header(None)):
+    if not x_api_key:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Missing X-API-Key header"
+        )
+    is_valid = await ApiKeyService.validate_key(x_api_key)
+    if not is_valid:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Invalid or revoked API key"
+        )

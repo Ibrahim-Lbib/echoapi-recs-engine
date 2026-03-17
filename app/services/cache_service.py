@@ -6,16 +6,19 @@ from app.core.config import settings
 import json
 from typing import List, Optional, Tuple
 
+def get_redis_client():
+    return redis.Redis(
+        host=settings.REDIS_HOST,
+        port=settings.REDIS_PORT,
+        decode_responses=True,
+        socket_timeout=2.0,
+        socket_connect_timeout=2.0
+    )
+
 class CacheService:
     @staticmethod
     async def get_cached_recommendations(db: AsyncSession, user_id_internal: int, external_user_id: str) -> Tuple[Optional[List[str]], str]:
-        r = redis.Redis(
-            host=settings.REDIS_HOST, 
-            port=settings.REDIS_PORT, 
-            decode_responses=True,
-            socket_timeout=2.0,
-            socket_connect_timeout=2.0
-        )
+        r = get_redis_client()
         try:
             cached = await r.get(f"recs:{external_user_id}")
             if cached:
@@ -52,13 +55,7 @@ class CacheService:
         await db.commit()
 
         # 2. Update Redis
-        r = redis.Redis(
-            host=settings.REDIS_HOST, 
-            port=settings.REDIS_PORT, 
-            decode_responses=True,
-            socket_timeout=2.0,
-            socket_connect_timeout=2.0
-        )
+        r = get_redis_client()
         try:
             await r.set(f"recs:{external_user_id}", json.dumps(recommendations), ex=3600) # 1 hour TTL
         except Exception:

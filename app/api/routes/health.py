@@ -27,6 +27,7 @@ async def health_check(db: AsyncSession = Depends(get_db)):
         health_status["components"]["database"] = f"error: {str(e)}"
 
     # Check Redis
+    r = None
     try:
         r = redis.Redis(host=settings.REDIS_HOST, port=settings.REDIS_PORT, decode_responses=True)
         await r.ping()
@@ -35,7 +36,8 @@ async def health_check(db: AsyncSession = Depends(get_db)):
         health_status["status"] = "unhealthy"
         health_status["components"]["redis"] = f"error: {str(e)}"
     finally:
-        await r.close()
+        if r:
+            await r.aclose()
 
     if health_status["status"] == "unhealthy":
         raise HTTPException(status_code=503, detail=health_status)

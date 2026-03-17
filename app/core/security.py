@@ -1,3 +1,4 @@
+# Reserved for future user auth. Not currently wired to any route.
 from datetime import datetime, timedelta
 from typing import Any, Union
 from jose import jwt
