@@ -23,7 +23,7 @@ app.add_middleware(
 
 app.add_middleware(
     TrustedHostMiddleware, 
-    allowed_hosts=["localhost", "127.0.0.1", "0.0.0.0", "test"]  # 'test' added for httpx test client
+    allowed_hosts=["localhost", "127.0.0.1", "0.0.0.0", "test", "echoapi-recs-engine.onrender.com"]  # 'test' added for httpx test client
 )
 
 @app.middleware("http")
