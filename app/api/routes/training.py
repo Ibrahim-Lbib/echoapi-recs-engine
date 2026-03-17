@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends, BackgroundTasks
 from sqlalchemy.ext.asyncio import AsyncSession
-from app.db.session import get_db, SessionLocal
+from app.core.dependencies import get_db, SessionLocal, verify_api_key
 from app.services.training_service import TrainingService
 
 router = APIRouter()
@@ -10,7 +10,7 @@ async def run_training_wrapper():
     async with SessionLocal() as db:
         await TrainingService.run_training(db)
 
-@router.post("/", status_code=202)
+@router.post("/", status_code=202, dependencies=[Depends(verify_api_key)])
 async def train_model(
     background_tasks: BackgroundTasks
 ):

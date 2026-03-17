@@ -5,3 +5,4 @@ class RecommendationResponse(BaseModel):
     user_id: str
     recommendations: List[str]
     source: str = Field(..., description="cache or fresh")
+    cold_start: bool = False

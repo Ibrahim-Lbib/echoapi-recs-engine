@@ -1,5 +1,5 @@
-from typing import Generator, Any
-from fastapi import Depends, HTTPException, status
+from typing import Generator, Any, Optional
+from fastapi import Depends, HTTPException, status, Header
 from fastapi.security import OAuth2PasswordBearer
 from jose import jwt
 from pydantic import ValidationError
@@ -32,3 +32,11 @@ async def get_current_user(
             detail="Could not validate credentials",
         )
     return token_data
+
+async def verify_api_key(x_api_key: Optional[str] = Header(None)):
+    if x_api_key != settings.API_KEY:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN, 
+            detail="Invalid or missing API key"
+        )
+    return x_api_key

@@ -15,5 +15,10 @@ async def get_recommendations(
     """
     Get personalized recommendations for a user.
     """
-    recs, source = await RecommendationService.get_recommendations(db, user_id)
-    return RecommendationResponse(user_id=user_id, recommendations=recs, source=source)
+    recs, source, is_cold_start = await RecommendationService.get_recommendations(db, user_id)
+    return RecommendationResponse(
+        user_id=user_id, 
+        recommendations=recs, 
+        source=source, 
+        cold_start=is_cold_start
+    )

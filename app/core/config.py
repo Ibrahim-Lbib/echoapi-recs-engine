@@ -13,6 +13,7 @@ class Settings(BaseSettings):
     PROJECT_NAME: str = "Recommendation API"
     API_V1_STR: str = "/api/v1"
     SECRET_KEY: str
+    API_KEY: str = "your-api-key-here"
     ALGORITHM: str = "HS256"
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 11520
 
