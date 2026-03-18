@@ -29,7 +29,7 @@ class ApiKeyService:
         key_hash = ApiKeyService._hash_key(raw_key)
         result = supabase.table("api_keys").select("id, is_active").eq(
             "key_hash", key_hash
-        ).single().execute()
+        ).maybe_single().execute()
         if not result.data or not result.data.get("is_active"):
             return False
         supabase.table("api_keys").update(

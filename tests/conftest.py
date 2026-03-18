@@ -1,6 +1,8 @@
 import os
 os.environ["SECRET_KEY"] = "test_secret_key"
 os.environ["API_KEY"] = "test_admin_key"
+os.environ["SUPABASE_URL"] = "https://test.supabase.co"
+os.environ["SUPABASE_SERVICE_KEY"] = "test_service_key"
 
 import asyncio
 import sys

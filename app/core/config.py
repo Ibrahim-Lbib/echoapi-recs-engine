@@ -32,7 +32,7 @@ class Settings(BaseSettings):
     DATABASE_URL: Optional[str] = None
 
     REDIS_HOST: str = "localhost"
-    REDIS_PORT: int = 5432
+    REDIS_PORT: int = 6379
     REDIS_PASSWORD: str = ""
 
     @field_validator("DATABASE_URL", mode="before")

@@ -7,7 +7,7 @@ class ApiKey(Base):
 
     id = Column(Integer, primary_key=True, index=True)
     key_hash = Column(String, unique=True, index=True, nullable=False)
-    prefix = Column(String(8), nullable=False)  # First 8 chars for display
+    key_prefix = Column(String(12), nullable=False)  # First 12 chars for display
     label = Column(String, nullable=True)
     is_active = Column(Boolean, default=True)
     created_at = Column(DateTime(timezone=True), server_default=func.now())
