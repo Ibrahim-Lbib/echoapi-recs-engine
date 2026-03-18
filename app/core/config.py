@@ -11,7 +11,7 @@ class Settings(BaseSettings):
         extra="ignore"
     )
 
-    PROJECT_NAME: str = "Recommendation API"
+    PROJECT_NAME: str = "EchoAPI Recs Engine"
     API_V1_STR: str = "/api/v1"
     SECRET_KEY: str
     API_KEY: str
@@ -23,16 +23,17 @@ class Settings(BaseSettings):
     DEBUG: bool = False
 
     POSTGRES_USER: str = "postgres"
-    POSTGRES_PASSWORD: str = "F9UQMn66PAMA3Fu8"
-    POSTGRES_SERVER: str = "db.rkecrktfocwklpifbefa.supabase.co"
+    POSTGRES_PASSWORD: str = ""
+    POSTGRES_SERVER: str = "localhost"
     POSTGRES_PORT: str = "5432"
     POSTGRES_DB: str = "postgres"
     
     # Computed lazily from separate components if not provided directly
     DATABASE_URL: Optional[str] = None
 
-    REDISHOST: str = "redis.railway.internal"
-    REDISPORT: int = 6379
+    REDIS_HOST: str = "localhost"
+    REDIS_PORT: int = 5432
+    REDIS_PASSWORD: str = ""
 
     @field_validator("DATABASE_URL", mode="before")
     @classmethod

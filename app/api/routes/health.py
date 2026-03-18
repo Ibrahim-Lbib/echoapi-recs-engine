@@ -29,7 +29,7 @@ async def health_check(db: AsyncSession = Depends(get_db)):
     # Check Redis
     r = None
     try:
-        r = redis.Redis(host=settings.REDIS_HOST, port=settings.REDIS_PORT, decode_responses=True)
+        r = redis.Redis(host=settings.REDIS_HOST, port=settings.REDIS_PORT, password=settings.REDIS_PASSWORD, ssl=True, decode_responses=True)
         await r.ping()
         health_status["components"]["redis"] = "up"
     except Exception as e:
